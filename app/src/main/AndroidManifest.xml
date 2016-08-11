@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.caballero.jorge.mymed" >
+
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/mymed"
+        android:label="@string/app_name"
+        android:supportsRtl="true">
+        <activity android:name=".activities.MyMed" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".activities.MyPills"
+            android:label="@string/mypills_button">
+        </activity>
+        <activity
+            android:name=".activities.MyPillsAdd"
+            android:label="@string/new_button">
+        </activity>
+        <activity
+            android:name=".activities.MyPillsEdit"
+            android:label="@string/edit_button">
+        </activity>
+        <activity
+            android:name=".activities.MyMed_Settings"
+            android:label="@string/settings">
+        </activity>
+        <activity
+            android:name=".activities.MyBPressure"
+            android:label="@string/mybpresure_button">
+        </activity>
+        <activity
+            android:name=".activities.MyBSugar"
+            android:label="@string/mybsugar_button">
+        </activity>
+        <receiver android:name=".services.DeviceBootReceiver"
+            android:enabled="false">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+            </intent-filter>
+        </receiver>
+        <receiver android:name=".services.Alarm"
+            android:enabled="true" /><!-- ATTENTION: This was auto-generated to add Google Play services to your project for
+     App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information. -->
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+    </application>
+
+</manifest>

@@ -1,0 +1,26 @@
+<resources>
+    <!--Titulos-->
+    <string name="app_name">MyMed</string>
+    <!--Botones-->
+    <string name="mypills_button">MyPills</string>
+    <string name="mybpresure_button">MyBloodPressure</string>
+    <string name="mybsugar_button">MyBloodGlucose</string>
+    <string name="new_button">Nuevo</string>
+    <string name="accept_button">Aceptar</string>
+    <string name="cancel_button">Cancelar</string>
+    <string name="edit_button">Editar</string>
+    <string name="delete_button">Borrar</string>
+    <string name="settings">Opciones</string>
+    <!--Textos-->
+    <string name="empty">No hay medicamentos apuntados todavía</string>
+    <string name="med_name">Nombre del medicamento</string>
+    <string name="med_duration">Fin tratamiento: </string>
+    <string name="med_dose">Dosificación diaria</string>
+    <string name="breakfast">Desayuno</string>
+    <string name="lunch">Comida</string>
+    <string name="dinner">Cena</string>
+    <string name="sleep">Al acostarse</string>
+    <string name="edit_mypills_alarms">Editar alarmas MyPills</string>
+    <string name="dialog_new_pressure">Introduce una nueva medida de presion arterial </string>
+    <string name="dialog_new_glucose">Introduce una nueva medida de glucosa</string>
+</resources>
