@@ -41,6 +41,7 @@ public class My2fieldsRow
 
     public My2fieldsRow(long id, String date, String value)
     {
+        this.id=id;
         this.date=date;
         this.value=value;
     }

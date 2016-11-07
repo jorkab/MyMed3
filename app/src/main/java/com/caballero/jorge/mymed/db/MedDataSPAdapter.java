@@ -19,7 +19,7 @@ public class MedDataSPAdapter
     public String getValue(String key)
     {
         SharedPreferences sharedPreferences = context.getSharedPreferences(MyPREFS, Context.MODE_PRIVATE);
-        return sharedPreferences.getString(key, null);
+        return sharedPreferences.getString(key, "00:00");
     }
 
     public void insertValue(String key,String value)
@@ -27,7 +27,7 @@ public class MedDataSPAdapter
         SharedPreferences sharedPreferences = context.getSharedPreferences(MyPREFS, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor=sharedPreferences.edit();
         editor.putString(key,value);
-        editor.commit();
+        editor.apply();
     }
 
 }

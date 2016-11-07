@@ -27,6 +27,8 @@ public class MyMed extends Activity implements OnClickListener  {
     private Button myBSugar;
     public final static String[] dose={"breakfast","lunch","dinner","sleep"};
     private final static int COD_SETTINGS_EDIT=1;
+    private SharedPreferences sharedPreferences;
+    MedDataSPAdapter medDataSPAdapter=new MedDataSPAdapter(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +41,23 @@ public class MyMed extends Activity implements OnClickListener  {
         myBPresure.setOnClickListener(this);
         myBSugar=(Button)findViewById(R.id.myBsugar);
         myBSugar.setOnClickListener(this);
+        sharedPreferences=getSharedPreferences(MedDataSPAdapter.MyPREFS,Context.MODE_PRIVATE);
+        /*try{
+            sharedPreferences.contains(dose[0]);
+        }
+        catch (NullPointerException ex){
+            String[] defaultValues={"7:00","14:00","20:00","22:00"};
+            for(int i=0;i<dose.length-1;i++) {
+                sharedPreferences.edit().putString(dose[i], defaultValues[i]);
+                sharedPreferences.edit().commit();
+            }
+        }*/
+        String[] defaultValues={"7:00","14:00","20:00","22:00"};
+        for(int i=0;i<dose.length-1;i++) {
+            medDataSPAdapter.insertValue(dose[i],defaultValues[i]);
+        }
         this.setAlarms();
+
     }
 
     //Listener de los botones de la aplicacion, lanza los intents para cada boton.
@@ -96,7 +114,6 @@ public class MyMed extends Activity implements OnClickListener  {
         switch (requestCode) {
             case COD_SETTINGS_EDIT:
                 if (resultCode == RESULT_OK) {
-
                     Boolean edit=data.getExtras().getBoolean("edit");
                     if(edit)
                     {
@@ -115,15 +132,14 @@ public class MyMed extends Activity implements OnClickListener  {
     {
         //cambiar el interval para las pruebas 1000*60*60*24
         int interval=1000*60*24;
-        SharedPreferences sharedPreferences=getSharedPreferences(MedDataSPAdapter.MyPREFS,Context.MODE_PRIVATE);
-        String[] defaultValues={"7:00","14:00","20:00","22:00"};
         Calendar[] date=new Calendar[4];
+
 
         //Busca en el archivo de shared preferences si existen datos de las alarmas si no existe aplica valores por defecto.
 
         for(int i=0;i<dose.length;i++)
         {
-            String hour= sharedPreferences.getString(dose[i],defaultValues[i]);
+            String hour= medDataSPAdapter.getValue(dose[i]);
             String[] splittedhour=hour.split(":");
             Calendar c=Calendar.getInstance();
             c.set(Calendar.HOUR_OF_DAY,Integer.valueOf(splittedhour[0]));

@@ -146,7 +146,7 @@ public class MedDataBDAdapter
     {
         LinkedList<My2fieldsRow>list=new LinkedList<>();
         db=dbHelper.getReadableDatabase();
-        Cursor c=db.rawQuery("SELECT _id, date, pressure FROM pressure ",null);
+        Cursor c=db.rawQuery("SELECT _id, date, pressure FROM "+ TABLE_PRESSURE+" ",null);
         if(c.moveToFirst())
         {
             do
@@ -159,5 +159,34 @@ public class MedDataBDAdapter
             db.close();
         }
         return list;
+    }
+    public void editMyPressureRow(long id,String date,String value)throws SQLException
+    {
+        db=dbHelper.getWritableDatabase();
+        ContentValues values=new ContentValues();
+        values.put(FIELD_DATE,date);
+        values.put(FIELD_PRESSURE,value);
+
+        db.update(TABLE_PRESSURE, values, FIELD_ID + "=" + id, null);
+        db.close();
+    }
+
+    public My2fieldsRow getMyPressureRow(long id)throws SQLException{
+        db=dbHelper.getReadableDatabase();
+        My2fieldsRow row=null;
+        Cursor c=db.rawQuery("SELECT _id, date, pressure FROM "+ TABLE_PRESSURE+" ",null);
+
+        if(c.moveToFirst())
+        {
+            row=new My2fieldsRow(id,c.getString(1),c.getString(2));
+        }
+        db.close();
+        return row;
+
+    }
+    public void deleteMyPressureRow(long id)throws SQLException{
+        db=dbHelper.getWritableDatabase();
+        db.delete(TABLE_PRESSURE,FIELD_ID+"="+id,null);
+        db.close();
     }
 }

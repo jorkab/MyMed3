@@ -3,7 +3,6 @@ package com.caballero.jorge.mymed.activities;
 import android.app.Activity;
 import android.app.TimePickerDialog;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -14,14 +13,12 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.Switch;
 import android.widget.TimePicker;
 
 import com.caballero.jorge.mymed.R;
 import com.caballero.jorge.mymed.db.MedDataSPAdapter;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 /**
  * Created by Jorge on 11/05/2016.
@@ -32,7 +29,6 @@ public class MyMed_Settings extends Activity implements View.OnClickListener{
     private Intent data;
     private ListView list;
     private ArrayAdapter<String> listAdapter;
-
     private MedDataSPAdapter SPAdapter=new MedDataSPAdapter(this);
     private int hour;
     private int minute;
@@ -57,21 +53,17 @@ public class MyMed_Settings extends Activity implements View.OnClickListener{
         list = (ListView) findViewById(R.id.settingsList);
         loadData();
         registerForContextMenu(list);
-
     }
 
     //Carga los valores del archivo sharedpreferences en el listado
 
     private void loadData()
     {
-
-        String[] hour = new String[dose.length];
+        ArrayList<String> hourList = new ArrayList<>();
         for (int i = 0; i < dose.length; i++) {
-            hour[i] = SPAdapter.getValue(dose[i]);
+            hourList.add(i,SPAdapter.getValue(dose[i]));
         }
-        ArrayList<String> hourList = new ArrayList<String>();
-        hourList.addAll(Arrays.asList(hour));
-        listAdapter = new ArrayAdapter<String>(this, R.layout.my_med_settings_row, hourList);
+        listAdapter = new ArrayAdapter<>(this, R.layout.my_med_settings_row, hourList);
         list.setAdapter(listAdapter);
     }
 
@@ -145,8 +137,6 @@ public class MyMed_Settings extends Activity implements View.OnClickListener{
                 this.finish();
                 break;
         }
-
-
     }
 }
 
