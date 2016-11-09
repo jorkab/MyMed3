@@ -1,8 +1,8 @@
 package com.caballero.jorge.mymed.activities;
 
 import android.app.Activity;
-import android.content.Context;
-import android.util.Log;
+
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +12,6 @@ import android.widget.TextView;
 import com.caballero.jorge.mymed.R;
 import com.caballero.jorge.mymed.data.My2fieldsRow;
 
-import java.util.LinkedList;
 
 /**
  * Created by P1047 on 11/08/2016.
@@ -20,10 +19,10 @@ import java.util.LinkedList;
 public class My2Fields_RowAdapter extends ArrayAdapter<My2fieldsRow>
 {
     //Atributos
-    Activity activity;
+    private Activity activity;
 
     //Constructor
-    public My2Fields_RowAdapter(Activity activity,int resource)
+    public My2Fields_RowAdapter(Activity activity, int resource)
     {
         super(activity,resource);
         this.activity=activity;
@@ -50,13 +49,8 @@ public class My2Fields_RowAdapter extends ArrayAdapter<My2fieldsRow>
         {
             row=(Row2fields) item.getTag();
         }
-        try{
-            row.date.setText(this.getItem(position).getDate());
-            row.date.setText(this.getItem(position).getValue());
-        }
-        catch (NullPointerException e){
-            Log.e(e.getClass().getName(), e.getMessage(), e);
-        }
+        row.date.setText(this.getItem(position).getDate());
+        row.value.setText(this.getItem(position).getValue());
 
         return item;
     }

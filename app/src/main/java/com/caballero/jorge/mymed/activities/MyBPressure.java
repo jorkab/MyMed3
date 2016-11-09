@@ -44,7 +44,7 @@ public class MyBPressure extends ListActivity implements View.OnClickListener{
         newButton.setOnClickListener(this);
 
         ListView listView=getListView();
-        adapter=new My2Fields_RowAdapter(this,R.layout.my_2fields_custom_row);
+        adapter=new My2Fields_RowAdapter(this,R.layout.activity_my_pills);
         listView.setAdapter(adapter);
         //Listener para eventos longclick en el listado.
         registerForContextMenu(listView);
@@ -125,7 +125,7 @@ public class MyBPressure extends ListActivity implements View.OnClickListener{
                     final EditText input=new EditText(this);
 
                     My2fieldsRow row=dbAdapter.getMyPressureRow(adapter.getItem(info.position).getId());
-                    long id=row.getId();
+                    final long row_id=row.getId();
                     final String date=row.getDate();
                     String value=row.getValue();
 
@@ -139,7 +139,7 @@ public class MyBPressure extends ListActivity implements View.OnClickListener{
                                     String value=input.getText().toString().trim();
                                     try
                                     {
-                                        dbAdapter.editMyPressureRow(id,date,value);
+                                        dbAdapter.editMyPressureRow(row_id,date,value);
                                         loadData();
                                     }
                                     catch (SQLException e)

@@ -12,29 +12,30 @@ import java.sql.SQLException;
 import java.util.LinkedList;
 
 /**
+ * Clase que contiene los métodos para realizar las operaciones de inserción modificación borrado y listado de objetos de la base de datos
  * Created by Jorge on 04/04/2016.
  */
 public class MedDataBDAdapter
 {
     //Atributos MyPills
-    public static final String TABLE_TREATMENT="treatment";
-    public static final String FIELD_NAME="name";
-    public static final String FIELD_BREAKFAST="breakfast";
-    public static final String FIELD_LUNCH="lunch";
-    public static final String FIELD_DINNER="dinner";
-    public static final String FIELD_SLEEP="sleep";
-    public static final String FIELD_DURATION="duration";
-    public static final String FIELD_ID="_id";
+    private static final String TABLE_TREATMENT="treatment";
+    private static final String FIELD_NAME="name";
+    private static final String FIELD_BREAKFAST="breakfast";
+    private static final String FIELD_DINNER="dinner";
+    private static final String FIELD_SLEEP="sleep";
+    private static final String FIELD_DURATION="duration";
+    private static final String FIELD_ID="_id";
+    private static final String FIELD_LUNCH="lunch";
 
     //Atributos MyBloodPressure
-    public static final String TABLE_PRESSURE="pressure";
-    public static final String FIELD_PRESSURE="pressure";
+    private static final String TABLE_PRESSURE="pressure";
+    private static final String FIELD_PRESSURE="pressure";
 
     //Atributos MyBloodGlucose
-    public static final String TABLE_GLUCOSE="glucose";
-    public static final String FIELD_GLUCOSE="glucose";
+    private static final String TABLE_GLUCOSE="glucose";
+    private static final String FIELD_GLUCOSE="glucose";
 
-    public static final String FIELD_DATE="date";
+    private static final String FIELD_DATE="date";
 
     private SQLiteDatabase db;
     private MedDataSQLiteHelper dbHelper;
@@ -75,6 +76,7 @@ public class MedDataBDAdapter
             row=new MyPills_Row(id,c.getString(0),c.getString(1),c.getInt(2), c.getInt(3),c.getInt(4),c.getInt(5));
         }
         db.close();
+        c.close();
         return row;
     }
 
@@ -160,6 +162,7 @@ public class MedDataBDAdapter
         }
         return list;
     }
+    //Dado un id y los valores de una nueva fila, actualiza los antiguos valores de la fila del id pasado
     public void editMyPressureRow(long id,String date,String value)throws SQLException
     {
         db=dbHelper.getWritableDatabase();
@@ -181,9 +184,11 @@ public class MedDataBDAdapter
             row=new My2fieldsRow(id,c.getString(1),c.getString(2));
         }
         db.close();
+        c.close();
         return row;
 
     }
+    //Elimina de la bd la fila pasada por id
     public void deleteMyPressureRow(long id)throws SQLException{
         db=dbHelper.getWritableDatabase();
         db.delete(TABLE_PRESSURE,FIELD_ID+"="+id,null);

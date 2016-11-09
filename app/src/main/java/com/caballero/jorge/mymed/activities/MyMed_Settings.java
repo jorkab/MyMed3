@@ -29,7 +29,7 @@ public class MyMed_Settings extends Activity implements View.OnClickListener{
     private Intent data;
     private ListView list;
     private ArrayAdapter<String> listAdapter;
-    private MedDataSPAdapter SPAdapter=new MedDataSPAdapter(this);
+    private MedDataSPAdapter SPAdapter;
     private int hour;
     private int minute;
     private AdapterView.AdapterContextMenuInfo info;
@@ -50,6 +50,8 @@ public class MyMed_Settings extends Activity implements View.OnClickListener{
         cancel=(Button)findViewById(R.id.cancel_button);
         cancel.setOnClickListener(this);
 
+        SPAdapter=new MedDataSPAdapter(this);
+
         list = (ListView) findViewById(R.id.settingsList);
         loadData();
         registerForContextMenu(list);
@@ -63,7 +65,7 @@ public class MyMed_Settings extends Activity implements View.OnClickListener{
         for (int i = 0; i < dose.length; i++) {
             hourList.add(i,SPAdapter.getValue(dose[i]));
         }
-        listAdapter = new ArrayAdapter<>(this, R.layout.my_med_settings_row, hourList);
+        listAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, hourList);
         list.setAdapter(listAdapter);
     }
 
@@ -79,7 +81,22 @@ public class MyMed_Settings extends Activity implements View.OnClickListener{
                     String [] splitTime=time.split(":");
                     hour=Integer.valueOf(splitTime[0]);
                     minute=Integer.valueOf(splitTime[1]);
-                    TimePickerDialog datePickerDialog = new TimePickerDialog(this, mTimeSetListener, hour, minute,true);
+                    TimePickerDialog datePickerDialog = new TimePickerDialog(this,new TimePickerDialog.OnTimeSetListener(){
+                        @Override
+                        public void onTimeSet(TimePicker timePicker,int selectedHour,int selectedMinute){
+                            String time;
+                            if(minute<10)
+                            {
+                                time=new String(String.valueOf(selectedHour)+":0"+String.valueOf(selectedMinute));
+                            }
+                            else
+                            {
+                                time=new String(String.valueOf(selectedHour)+":"+String.valueOf(selectedMinute));
+                            }
+                            SPAdapter.insertValue(dose[info.position],time);
+                            loadData();
+                        }
+                    },hour, minute,true);
                     datePickerDialog.show();
                     data.putExtra("edit",true);
                     break;
@@ -102,26 +119,6 @@ public class MyMed_Settings extends Activity implements View.OnClickListener{
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_onlongclick_settings, menu);
     }
-
-    protected TimePickerDialog.OnTimeSetListener mTimeSetListener = new TimePickerDialog.OnTimeSetListener() {
-
-        public void onTimeSet(TimePicker view, int mHour, int mMinute) {
-            hour=mHour;
-            minute=mMinute;
-            String time;
-            if(minute<10)
-            {
-                time=new String(String.valueOf(hour)+":0"+String.valueOf(minute));
-            }
-            else
-            {
-                time=new String(String.valueOf(hour)+":"+String.valueOf(minute));
-            }
-            SPAdapter.insertValue(dose[info.position],time);
-            loadData();
-        }
-    };
-
     @Override
     public void onClick(View v)
     {

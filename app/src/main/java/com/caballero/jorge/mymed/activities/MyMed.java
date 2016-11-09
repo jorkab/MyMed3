@@ -3,9 +3,7 @@ package com.caballero.jorge.mymed.activities;
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -27,8 +25,7 @@ public class MyMed extends Activity implements OnClickListener  {
     private Button myBSugar;
     public final static String[] dose={"breakfast","lunch","dinner","sleep"};
     private final static int COD_SETTINGS_EDIT=1;
-    private SharedPreferences sharedPreferences;
-    MedDataSPAdapter medDataSPAdapter=new MedDataSPAdapter(this);
+    MedDataSPAdapter medDataSPAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,23 +38,15 @@ public class MyMed extends Activity implements OnClickListener  {
         myBPresure.setOnClickListener(this);
         myBSugar=(Button)findViewById(R.id.myBsugar);
         myBSugar.setOnClickListener(this);
-        sharedPreferences=getSharedPreferences(MedDataSPAdapter.MyPREFS,Context.MODE_PRIVATE);
-        /*try{
-            sharedPreferences.contains(dose[0]);
-        }
-        catch (NullPointerException ex){
-            String[] defaultValues={"7:00","14:00","20:00","22:00"};
-            for(int i=0;i<dose.length-1;i++) {
-                sharedPreferences.edit().putString(dose[i], defaultValues[i]);
-                sharedPreferences.edit().commit();
+        //Realizar comprobacion de si existe la primera key para en caso negativo inicializar el archivo con los valores por defecto.
+        medDataSPAdapter=new MedDataSPAdapter(this);
+        if(!medDataSPAdapter.isKey(dose[0])){
+            for(int i=0;i<dose.length;i++) {
+                String[] defaultValues={"7:00","14:00","20:00","22:00"};
+                medDataSPAdapter.insertValue(dose[i],defaultValues[i]);
             }
-        }*/
-        String[] defaultValues={"7:00","14:00","20:00","22:00"};
-        for(int i=0;i<dose.length-1;i++) {
-            medDataSPAdapter.insertValue(dose[i],defaultValues[i]);
         }
         this.setAlarms();
-
     }
 
     //Listener de los botones de la aplicacion, lanza los intents para cada boton.
@@ -131,7 +120,7 @@ public class MyMed extends Activity implements OnClickListener  {
     public void setAlarms()
     {
         //cambiar el interval para las pruebas 1000*60*60*24
-        int interval=1000*60*24;
+        int interval=1000*60*60*24;
         Calendar[] date=new Calendar[4];
 
 
