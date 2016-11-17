@@ -16,6 +16,7 @@ import android.util.Log;
 import com.caballero.jorge.mymed.R;
 import com.caballero.jorge.mymed.data.MyPills_Row;
 import com.caballero.jorge.mymed.db.MedDataBDAdapter;
+import com.caballero.jorge.mymed.db.MedDataSPAdapter;
 
 import java.sql.SQLException;
 import java.util.Calendar;
@@ -28,7 +29,8 @@ public class Alarm extends BroadcastReceiver
 {
     private Context context;
     private MedDataBDAdapter dbAdapter;
-
+    public final static String[] dose={"breakfast","lunch","dinner","sleep"};
+    MedDataSPAdapter medDataSPAdapter;
 
     @Override
     public void onReceive(Context context, Intent intent)
@@ -129,5 +131,39 @@ public class Alarm extends BroadcastReceiver
                 .build();
 
         notManager.notify((int)Math.random(),notification);
+    }
+    //Crea los intents de las alarmas
+
+    public void setAlarms(Context context)
+    {
+        //cambiar el interval para las pruebas 1000*60*60*24
+        int interval=1000*60*60*24;
+        Calendar[] date=new Calendar[4];
+        medDataSPAdapter=new MedDataSPAdapter(context);
+
+        //Busca en el archivo de shared preferences si existen datos de las alarmas si no existe aplica valores por defecto.
+
+        for(int i=0;i<dose.length;i++)
+        {
+            String hour= medDataSPAdapter.getValue(dose[i]);
+            String[] splittedhour=hour.split(":");
+            Calendar c=Calendar.getInstance();
+            c.set(Calendar.HOUR_OF_DAY,Integer.valueOf(splittedhour[0]));
+            c.set(Calendar.MINUTE,Integer.valueOf(splittedhour[1]));
+            date[i]=c;
+        }
+
+        //Crea un intent para cada alarma con los datos obtenidos del archivo de sharedpreferences.
+
+        for(int i=0;i<dose.length;i++)
+        {
+            Intent intent=new Intent(context,Alarm.class);
+            //Flag que permite arrancar el servicio de alarmas desde el estado Stopped
+            intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+            intent.putExtra("dose", dose[i]);
+            PendingIntent pendingIntent= PendingIntent.getBroadcast(context,i,intent,0);
+            AlarmManager alarmManager=(AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,date[i].getTimeInMillis(),interval,pendingIntent);
+        }
     }
 }

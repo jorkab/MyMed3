@@ -29,9 +29,11 @@ public class MyMed_Settings extends Activity implements View.OnClickListener{
     private Intent data;
     private ListView list;
     private ArrayAdapter<String> listAdapter;
+    private ArrayList<String> hourList = new ArrayList<>();
     private MedDataSPAdapter SPAdapter;
     private int hour;
     private int minute;
+    private String time;
     private AdapterView.AdapterContextMenuInfo info;
     private String[] dose=MyMed.dose;
     private Button accept;
@@ -51,6 +53,9 @@ public class MyMed_Settings extends Activity implements View.OnClickListener{
         cancel.setOnClickListener(this);
 
         SPAdapter=new MedDataSPAdapter(this);
+        for (int i = 0; i < dose.length; i++) {
+            hourList.add(i,SPAdapter.getValue(dose[i]));
+        }
 
         list = (ListView) findViewById(R.id.settingsList);
         loadData();
@@ -61,10 +66,6 @@ public class MyMed_Settings extends Activity implements View.OnClickListener{
 
     private void loadData()
     {
-        ArrayList<String> hourList = new ArrayList<>();
-        for (int i = 0; i < dose.length; i++) {
-            hourList.add(i,SPAdapter.getValue(dose[i]));
-        }
         listAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, hourList);
         list.setAdapter(listAdapter);
     }
@@ -77,15 +78,15 @@ public class MyMed_Settings extends Activity implements View.OnClickListener{
             info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
             switch (item.getItemId()) {
                 case R.id.edit:
-                    String time= SPAdapter.getValue(dose[info.position]);
+                    time= SPAdapter.getValue(dose[info.position]);
                     String [] splitTime=time.split(":");
                     hour=Integer.valueOf(splitTime[0]);
                     minute=Integer.valueOf(splitTime[1]);
                     TimePickerDialog datePickerDialog = new TimePickerDialog(this,new TimePickerDialog.OnTimeSetListener(){
-                        @Override
+                       @Override
                         public void onTimeSet(TimePicker timePicker,int selectedHour,int selectedMinute){
-                            String time;
-                            if(minute<10)
+
+                            if(selectedMinute<10)
                             {
                                 time=new String(String.valueOf(selectedHour)+":0"+String.valueOf(selectedMinute));
                             }
@@ -93,7 +94,7 @@ public class MyMed_Settings extends Activity implements View.OnClickListener{
                             {
                                 time=new String(String.valueOf(selectedHour)+":"+String.valueOf(selectedMinute));
                             }
-                            SPAdapter.insertValue(dose[info.position],time);
+                            hourList.set(info.position,time);
                             loadData();
                         }
                     },hour, minute,true);
@@ -125,6 +126,7 @@ public class MyMed_Settings extends Activity implements View.OnClickListener{
         switch(v.getId())
         {
             case R.id.accept_button:
+                SPAdapter.insertValue(dose[info.position],time);
                 setResult(RESULT_OK,data);
                 this.finish();
                 break;

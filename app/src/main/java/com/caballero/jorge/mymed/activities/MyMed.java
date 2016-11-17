@@ -1,8 +1,6 @@
 package com.caballero.jorge.mymed.activities;
 
 import android.app.Activity;
-import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -16,13 +14,12 @@ import com.caballero.jorge.mymed.R;
 import com.caballero.jorge.mymed.db.MedDataSPAdapter;
 import com.caballero.jorge.mymed.services.*;
 
-import java.util.Calendar;
-
 public class MyMed extends Activity implements OnClickListener  {
 
     private Button myPills;
     private Button myBPresure;
     private Button myBSugar;
+    private Alarm alarm;
     public final static String[] dose={"breakfast","lunch","dinner","sleep"};
     private final static int COD_SETTINGS_EDIT=1;
     MedDataSPAdapter medDataSPAdapter;
@@ -39,14 +36,16 @@ public class MyMed extends Activity implements OnClickListener  {
         myBSugar=(Button)findViewById(R.id.myBsugar);
         myBSugar.setOnClickListener(this);
         //Realizar comprobacion de si existe la primera key para en caso negativo inicializar el archivo con los valores por defecto.
+        alarm=new Alarm();
         medDataSPAdapter=new MedDataSPAdapter(this);
         if(!medDataSPAdapter.isKey(dose[0])){
             for(int i=0;i<dose.length;i++) {
                 String[] defaultValues={"7:00","14:00","20:00","22:00"};
                 medDataSPAdapter.insertValue(dose[i],defaultValues[i]);
             }
+            alarm.setAlarms(this);
         }
-        this.setAlarms();
+
     }
 
     //Listener de los botones de la aplicacion, lanza los intents para cada boton.
@@ -106,47 +105,12 @@ public class MyMed extends Activity implements OnClickListener  {
                     Boolean edit=data.getExtras().getBoolean("edit");
                     if(edit)
                     {
-                        this.setAlarms();
+                        alarm.setAlarms(this);
                     }
                 }
                 break;
             default:
                 break;
-        }
-    }
-
-    //Crea los intents de las alarmas
-
-    public void setAlarms()
-    {
-        //cambiar el interval para las pruebas 1000*60*60*24
-        int interval=1000*60*60*24;
-        Calendar[] date=new Calendar[4];
-
-
-        //Busca en el archivo de shared preferences si existen datos de las alarmas si no existe aplica valores por defecto.
-
-        for(int i=0;i<dose.length;i++)
-        {
-            String hour= medDataSPAdapter.getValue(dose[i]);
-            String[] splittedhour=hour.split(":");
-            Calendar c=Calendar.getInstance();
-            c.set(Calendar.HOUR_OF_DAY,Integer.valueOf(splittedhour[0]));
-            c.set(Calendar.MINUTE,Integer.valueOf(splittedhour[1]));
-            date[i]=c;
-        }
-
-        //Crea un intent para cada alarma con los datos obtenidos del archivo de sharedpreferences.
-
-        for(int i=0;i<dose.length;i++)
-        {
-            Intent intent=new Intent(this,Alarm.class);
-            //Flag que permite arrancar el servicio de alarmas desde el estado Stopped
-            intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-            intent.putExtra("dose", dose[i]);
-            PendingIntent pendingIntent= PendingIntent.getBroadcast(this.getApplicationContext(),i,intent,0);
-            AlarmManager alarmManager=(AlarmManager) getSystemService(ALARM_SERVICE);
-            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,date[i].getTimeInMillis(),interval,pendingIntent);
         }
     }
 }

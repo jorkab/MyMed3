@@ -128,6 +128,73 @@ public class MedDataBDAdapter
         return list;
     }
 
+    //Metodos para la tabla MyBloodGlucose
+    //Inserta un registro en MyBloodGlucose
+
+    public void insertMyGlucoseRow(String date,String glucose)throws SQLException
+    {
+        db=dbHelper.getWritableDatabase();
+        ContentValues values=new ContentValues();
+        values.put(FIELD_DATE,date);
+        values.put(FIELD_GLUCOSE,glucose);
+
+        db.insert(TABLE_GLUCOSE,null,values);
+        db.close();
+    }
+
+    //Devuelve todos los registros de la tabla glucose
+
+    public LinkedList<My2fieldsRow> getMyGlucoseRows() throws SQLException
+    {
+        LinkedList<My2fieldsRow>list=new LinkedList<>();
+        db=dbHelper.getReadableDatabase();
+        Cursor c=db.rawQuery("SELECT _id, date, glucose FROM "+ TABLE_GLUCOSE+" ",null);
+        if(c.moveToFirst())
+        {
+            do
+            {
+                My2fieldsRow myBglucose_row=new My2fieldsRow(c.getLong(0),c.getString(1),c.getString(2));
+                list.add(myBglucose_row);
+            }
+            while(c.moveToNext());
+            c.close();
+            db.close();
+        }
+        return list;
+    }
+    //Dado un id y los valores de una nueva fila, actualiza los antiguos valores de la fila del id pasado
+    public void editMyGlucoseRow(long id,String date,String value)throws SQLException
+    {
+        db=dbHelper.getWritableDatabase();
+        ContentValues values=new ContentValues();
+        values.put(FIELD_DATE,date);
+        values.put(FIELD_GLUCOSE,value);
+
+        db.update(TABLE_GLUCOSE, values, FIELD_ID + "=" + id, null);
+        db.close();
+    }
+
+    public My2fieldsRow getMyGlucoseRow(long id)throws SQLException{
+        db=dbHelper.getReadableDatabase();
+        My2fieldsRow row=null;
+        Cursor c=db.rawQuery("SELECT _id, date, glucose FROM "+ TABLE_GLUCOSE+" ",null);
+
+        if(c.moveToFirst())
+        {
+            row=new My2fieldsRow(id,c.getString(1),c.getString(2));
+        }
+        db.close();
+        c.close();
+        return row;
+
+    }
+    //Elimina de la bd la fila pasada por id
+    public void deleteMyGlucoseRow(long id)throws SQLException{
+        db=dbHelper.getWritableDatabase();
+        db.delete(TABLE_GLUCOSE,FIELD_ID+"="+id,null);
+        db.close();
+    }
+
     //Metodos para la tabla MyBloodPressure
     //Inserta un registro en MyBloodPressure
 

@@ -3,8 +3,8 @@
     <string name="app_name">MyMed</string>
     <!--Botones-->
     <string name="mypills_button">MyPills</string>
-    <string name="mybpresure_button">MyBloodPressure</string>
-    <string name="mybsugar_button">MyBloodGlucose</string>
+    <string name="mybpresure_button">MyBPressure</string>
+    <string name="mybsugar_button">MyBGlucose</string>
     <string name="new_button">Nuevo</string>
     <string name="accept_button">Aceptar</string>
     <string name="cancel_button">Cancelar</string>
@@ -12,7 +12,7 @@
     <string name="delete_button">Borrar</string>
     <string name="settings">Opciones</string>
     <!--Textos-->
-    <string name="empty">No hay medicamentos apuntados todavía</string>
+    <string name="empty">La lista está vacía</string>
     <string name="med_name">Nombre del medicamento</string>
     <string name="med_duration">Fin tratamiento: </string>
     <string name="med_dose">Dosificación diaria</string>
